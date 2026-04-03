@@ -1,0 +1,22 @@
+.catalog {
+    display: flex;
+    flex-direction: column;
+
+    padding: 20px 100px 40px;
+    width: 100%;
+    box-sizing: border-box;
+
+
+    &__title {
+        font-weight: 600 !important;
+    }
+
+    &__list {
+        max-width: 100%;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(352px, 1fr));
+        
+        column-gap: 70px;
+        row-gap: 30px;
+    }
+}

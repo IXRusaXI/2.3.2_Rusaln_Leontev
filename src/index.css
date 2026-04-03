@@ -1,7 +1,42 @@
+@font-face {
+  font-family: 'Inter';
+  src: url('./page/fonts/Inter-Regular.otf') format('opentype');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('./page/fonts/Inter-Medium.otf') format('opentype');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('./page/fonts/Inter-SemiBold.otf') format('opentype');
+  font-weight: 600;
+}
+
+
+@font-face {
+  font-family: 'Inter';
+  src: url('./page/fonts/Inter-Bold.otf') format('opentype');
+  font-weight: 700;
+}
+
 html,
 body {
+    height: 100%;
+    min-height: 100wh;
+    min-width: 100ww;
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
+
+    font-family: "Inter", sans-serif;
+}
+
+body.modal-open {
+    overflow: hidden; 
 }
 
 button {
