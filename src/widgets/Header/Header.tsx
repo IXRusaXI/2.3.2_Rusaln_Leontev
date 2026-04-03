@@ -3,10 +3,14 @@ import Badge from "../../shared/Badge/Badge"
 import CardButton from '../../shared/CartButton/CartButton'
 import { useState, useRef } from 'react';
 import Modal from '../../widgets/Modal/Modal'
+import type { Item } from '../Catalog/Catalog';
 
-function Header() {
+interface HeaderProps {
+    products: Item[]
+}
+
+function Header({ products }: HeaderProps) {
     const [isOpen, setIsOpen] = useState(false);
-    // useLockBodyScroll(isOpen)
 
     const togglePopup = () => {
         setIsOpen(!isOpen);
@@ -20,7 +24,7 @@ function Header() {
 
             <CardButton  text='Cart' onClick={togglePopup}/>
         </header>
-        <Modal isOpen={isOpen} onRequestClose={togglePopup}/>
+        <Modal productList={products} isOpen={isOpen} onRequestClose={togglePopup}/>
     </>)
 }
 

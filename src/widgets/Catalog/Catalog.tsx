@@ -2,28 +2,19 @@ import './style.scss'
 import Card from './../Card/Card'
 import { useState, useEffect } from 'react'
 
-interface Item {
+export interface Item {
     id: number,
     name: string,
     price: number,
-    image: string
+    image: string,
 }
 
-export default function Catalog() {
-    const [itemList, setItemList] = useState([])
+interface CatalogProps {
+    itemList: Item[]
+}
 
-    const fetchItemList = async () => {
-        const response = await fetch('https://res.cloudinary.com/sivadass/raw/upload/v1535817394/json/products.json')
-        const itemList = await response.json()
-        return itemList
-    }
-
-    useEffect(() => {
-        fetchItemList()
-        .then(itemList => setItemList(itemList))
-        .catch(error => console.log(error))
-    }, [])
-
+export default function Catalog({itemList}: CatalogProps) {
+    
     return (
         <div className="catalog">
           <h1 className="catalog__title">Catalog</h1>
