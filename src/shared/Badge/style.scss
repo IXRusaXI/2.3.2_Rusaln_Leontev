@@ -1,0 +1,29 @@
+.badge {
+    display: flex;
+    align-items: center;
+
+
+    height: 34px;
+    // width: 210px;
+    padding-bottom: 2px;
+
+    border-radius: 32px;
+
+    font-size: 20px;
+    font-weight: 600;
+
+    &--white {
+        background-color: #F7F7F7;
+        color: black;
+    }
+
+    &--green {
+        background-color: #54B46A;
+        color: white;
+    }
+
+    &__text{
+        margin: 0 10px;
+    }
+
+}
