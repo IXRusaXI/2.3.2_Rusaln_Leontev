@@ -1,7 +1,7 @@
 import './style.scss'
 import Badge from "../../shared/Badge/Badge"
 import CardButton from '../../shared/CartButton/CartButton'
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import Modal from '../../widgets/Modal/Modal'
 import type { Item } from '../Catalog/Catalog';
 

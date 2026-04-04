@@ -2,7 +2,6 @@ import type { Item } from "../../widgets/Catalog/Catalog";
 import StepperCounter from "../StepperCounter/StepperCounter";
 import "./style.scss";
 import classNames from "classnames";
-import { useEffect, useRef, useState } from "react";
 
 interface ModalCardProps {
     item: Item;

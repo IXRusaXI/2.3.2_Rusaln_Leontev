@@ -1,5 +1,4 @@
 import StepperButton from "../StepperButton/StepperButton"
-import classNames from "classnames"
 import "./style.scss"
 import { useEffect, useState } from 'react'
 import type { Item } from "../../widgets/Catalog/Catalog";

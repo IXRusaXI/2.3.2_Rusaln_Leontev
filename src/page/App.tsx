@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import Header from '../widgets/Header/Header'
 import Catalog from '../widgets/Catalog/Catalog'
-import Modal from '../widgets/Modal/Modal'
 import './App.css'
 import type { Item } from '../widgets/Catalog/Catalog'
 

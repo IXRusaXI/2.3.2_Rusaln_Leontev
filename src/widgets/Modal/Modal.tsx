@@ -1,6 +1,4 @@
-import StepperButton from "../../shared/StepperButton/StepperButton";
 import './style.scss'
-import useLockBodyScroll from '../../features/useLockBodyScroll/useLockBodyScroll'
 import type { Item } from "../Catalog/Catalog";
 import ModalCard from "../../shared/ModalCard/ModalCard";
 import { useEffect, useState } from "react";

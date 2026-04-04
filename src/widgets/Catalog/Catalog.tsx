@@ -1,6 +1,5 @@
 import './style.scss'
 import Card from './../Card/Card'
-import { useState, useEffect } from 'react'
 
 export interface Item {
     id: number,
@@ -20,7 +19,7 @@ export default function Catalog({itemList, addToCart}: CatalogProps) {
         <div className="catalog">
           <h1 className="catalog__title">Catalog</h1>
           <div className="catalog__list">
-            {itemList.map((item, idx) => {
+            {itemList.map((item) => {
                 // console.log('Catalog item[' + idx + ']:', item);
                 return (
                     <Card
