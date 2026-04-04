@@ -2,15 +2,23 @@ import type { Item } from "../../widgets/Catalog/Catalog";
 import StepperCounter from "../StepperCounter/StepperCounter";
 import "./style.scss";
 import classNames from "classnames";
+import { useEffect, useRef, useState } from "react";
 
 interface ModalCardProps {
     item: Item;
-    bordered: boolean
+    bordered: boolean;
+    count: number;
+    removeFromCart: (item: Item) => void;
+    updateCart: (item: Item, count: number) => void
 }
 
-function ModalCard({item, bordered}: ModalCardProps) {
-    console.log("Item: ", item, bordered)
-
+function ModalCard({
+    item, 
+    bordered, 
+    count, 
+    removeFromCart,
+    updateCart
+}: ModalCardProps) {
     return (
         <div className="modal-card" onClick={(e) => e.stopPropagation()}>
             <div className="modal-card__image-container">
@@ -24,7 +32,12 @@ function ModalCard({item, bordered}: ModalCardProps) {
                     <span className="modal-card__price">$ {item.price}</span>
                 </div>
 
-                <StepperCounter />
+                <StepperCounter 
+                    item={item}
+                    removeFromCart={(item) => removeFromCart(item)}
+                    updateCart={(item, count) => updateCart(item, count)}
+                    initialCount={count} 
+                />
             </div>
         </div>
     );

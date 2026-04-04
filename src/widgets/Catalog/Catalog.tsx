@@ -10,18 +10,36 @@ export interface Item {
 }
 
 interface CatalogProps {
-    itemList: Item[]
+    itemList: Item[];
+    addToCart: (item: Item, count: number) => void
 }
 
-export default function Catalog({itemList}: CatalogProps) {
+export default function Catalog({itemList, addToCart}: CatalogProps) {
     
     return (
         <div className="catalog">
           <h1 className="catalog__title">Catalog</h1>
           <div className="catalog__list">
-            {itemList.map((item: Item) => (
-                <Card key={item.id} title={item.name} price={item.price} image={item.image} />
-            ))}
+            {itemList.map((item, idx) => {
+                // console.log('Catalog item[' + idx + ']:', item);
+                return (
+                    <Card
+                        key={item.id}
+                        item={item}
+                        addToCart={(item, count) => addToCart(item, count)}
+                    />
+                );
+            })}
+            {/* {itemList.map((item: Item) => (
+                
+                <Card 
+                    key={item.id} 
+                    item={item}
+                    title={item.name} 
+                    price={item.price} 
+                    image={item.image} 
+                />
+            ))} */}
           </div>
         </div>
     )

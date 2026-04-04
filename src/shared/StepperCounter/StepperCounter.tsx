@@ -1,13 +1,51 @@
 import StepperButton from "../StepperButton/StepperButton"
 import classNames from "classnames"
 import "./style.scss"
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import type { Item } from "../../widgets/Catalog/Catalog";
 
-export default function StepperCounter() {
-    const [count, setCount] = useState(0)
+interface StepperCounterProps {
+    item: Item;
+    add?: boolean;
+    initialCount: number;
+    removeFromCart?: (item: Item) => void;
+    updateCart?: (item: Item, count: number) => void;
+    addProductToCart?: (item: Item, count: number) => void;
+}
 
-    const handleIncrement = () => setCount(count + 1)
-    const handleDecrement = () => setCount(count - 1)
+export default function StepperCounter({
+    item,
+    initialCount, 
+    removeFromCart,
+    updateCart,
+    addProductToCart,
+    add,
+}: StepperCounterProps) {
+    const [count, setCount] = useState(initialCount)
+
+    useEffect(() => {
+        if (addProductToCart) addProductToCart(item, count)
+    }, [add])
+
+    const handleIncrement = () => {
+        if (updateCart) updateCart(item, count + 1)
+        setCount(count + 1)
+    }
+
+    const handleDecrement = () => {
+        if (count - 1 < 0) return
+
+        if (count - 1 === 0) {
+            if (removeFromCart) removeFromCart(item)
+            setCount(count - 1)
+            return
+        }
+
+        if (updateCart) updateCart(item, count - 1)
+        setCount(count - 1)
+    }
+
+
 
     return (
         <div className="stepper-counter">

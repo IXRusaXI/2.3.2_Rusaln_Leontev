@@ -6,10 +6,18 @@ import Modal from '../../widgets/Modal/Modal'
 import type { Item } from '../Catalog/Catalog';
 
 interface HeaderProps {
-    products: Item[]
+    products: Map<Item, number>;
+    removeFromCart: (item: Item) => void;
+    updateCart: (item: Item, count: number) => void;
+    totalCount: number
 }
 
-function Header({ products }: HeaderProps) {
+function Header({ 
+    products, 
+    removeFromCart, 
+    updateCart, 
+    totalCount 
+}: HeaderProps) {
     const [isOpen, setIsOpen] = useState(false);
 
     const togglePopup = () => {
@@ -24,7 +32,14 @@ function Header({ products }: HeaderProps) {
 
             <CardButton  text='Cart' onClick={togglePopup}/>
         </header>
-        <Modal productList={products} isOpen={isOpen} onRequestClose={togglePopup}/>
+        <Modal 
+            totalCount={totalCount}
+            productList={products} 
+            isOpen={isOpen} 
+            onRequestClose={togglePopup}
+            removeFromCart={(item) => removeFromCart(item)}
+            updateCart={(item, count) => updateCart(item, count)}
+        />
     </>)
 }
 
