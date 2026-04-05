@@ -29,16 +29,6 @@ export default function Catalog({itemList, addToCart}: CatalogProps) {
                     />
                 );
             })}
-            {/* {itemList.map((item: Item) => (
-                
-                <Card 
-                    key={item.id} 
-                    item={item}
-                    title={item.name} 
-                    price={item.price} 
-                    image={item.image} 
-                />
-            ))} */}
           </div>
         </div>
     )
