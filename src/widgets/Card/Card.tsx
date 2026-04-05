@@ -21,7 +21,7 @@ export default function Card({item, addToCart}: CardProps) {
         
             <div className="card__row-wrapper">
                 <div className="card__title">
-                    <h2 className="card__name">{title}</h2>
+                    <h3 className="card__name">{title}</h3>
                     <span className="card__weight">{weight}</span>
                 </div>
 

@@ -38,7 +38,18 @@
         font-weight: 600;
     }
 
-    
+    &__count {
+        color:#3B944E;
+        display: flex;
+        height: 22px;
+        width: 22px;
+        border-radius: 50%;
+        justify-content: center;
+        align-items: center;
+        background-color: white;
+        font-family: Inter;
+        font-weight: 600;
+    }
 }
 
 .add-cart-button {

@@ -3,11 +3,13 @@ import Header from '../widgets/Header/Header'
 import Catalog from '../widgets/Catalog/Catalog'
 import './App.css'
 import type { Item } from '../widgets/Catalog/Catalog'
+import Modal from '../widgets/Modal/Modal'
 
 function App() {
   const [products, setProducts] = useState<Map<Item, number>>(new Map())
   const [itemList, setItemList] = useState([])
   const [totalCount, setTotalCount] = useState(0)
+  const [isOpen, setIsOpen] = useState(false);
 
   const fetchItemList = async () => {
       const response = await fetch('https://res.cloudinary.com/sivadass/raw/upload/v1535817394/json/products.json')
@@ -76,17 +78,28 @@ function App() {
     Array.from(products.entries()).forEach(([key, value]) => newProducts.set(key, value))
     setProducts(newProducts)
   }
+
+  const togglePopup = () => {
+      setIsOpen(!isOpen);
+  };
+
     
   return (<div className='app'>
         <Header 
-          totalCount={totalCount}
-          products={products} 
-          removeFromCart={(item) => removeFromCart(item)}
-          updateCart={(item, count) => updateCart(item, count)}
+          productCount={products.size}
+          togglePopup={() => togglePopup()}
         />
         <Catalog 
           itemList={itemList}
           addToCart={(item, count) => addToCart(item, count)}
+        />
+        <Modal 
+          isOpen={isOpen}
+          totalCount={totalCount}
+          productList={products}
+          onRequestClose={togglePopup}
+          removeFromCart={(item) => removeFromCart(item)}
+          updateCart={(item, count) => updateCart(item, count)}
         />
     </div>
   )
@@ -95,5 +108,5 @@ function App() {
 export default App
 
 
-Вынести модал в App
-НЕХВАТАЕТ ТОТАЛА, ОТОБРАЖЕНИЯ КОЛИЧЕСТВА ПОЗИЦИЙ, ОБНУЛЕННОЕ СОСТОЯНИЕ
+// Вынести модал в App
+// НЕХВАТАЕТ ТОТАЛА, ОТОБРАЖЕНИЯ КОЛИЧЕСТВА ПОЗИЦИЙ, ОБНУЛЕННОЕ СОСТОЯНИЕ

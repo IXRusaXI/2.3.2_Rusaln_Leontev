@@ -15,6 +15,7 @@ interface CatalogProps {
 
 export default function Catalog({itemList, addToCart}: CatalogProps) {
     
+
     return (
         <div className="catalog">
           <h1 className="catalog__title">Catalog</h1>

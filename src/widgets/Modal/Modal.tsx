@@ -21,7 +21,8 @@ const Modal = ({
     totalCount
 }: ModalProps) => {
     const [products, setProducts] = useState<[Item, number][]>([])
-        console.log("Сука", totalCount)
+    const [totalCost, setTotalCost] = useState(0)
+        console.log("Сука", isOpen)
     useEffect(() => {
         console.log("Обновил списо продуктов в корзине",
             productList?.size,
@@ -29,22 +30,31 @@ const Modal = ({
         )
         if (productList) {
             const array = Array.from(productList?.entries())
+            setTotalCost(calculateTotalCost(array))
             setProducts(array)
         }
     }, [totalCount, productList?.size, isOpen])
 
-    if (!isOpen) return null;
+
 
     function deleteOne() {
         setProducts(prev => prev.slice(0, prev.length - 1))
     }
 
-    const total = '12'
+    function calculateTotalCost(list: [Item, number][]) {
+        let total = 0
+        list.forEach(([item, count]) => {
+            total += item.price * count
+        })
+        return total
+    }
+
+    if (!isOpen) return null;
 
     return (
         <div className="overlay" onClick={onRequestClose}>
             <div className="modal" onClick={(e) => e.stopPropagation()}>
-                <div className="modal__product-list">
+                {(totalCost !== 0) && <div className="modal__product-list">
                     {products?.map(([item, count], index ) => (
                         
                     <ModalCard 
@@ -55,16 +65,18 @@ const Modal = ({
                         item={item} 
                         bordered={index !== products.length - 1}
                     />))}
-                </div>
+                </div>}
 
-                <div className="modal__total">
+                {(totalCost !== 0) && <div className="modal__total">
                     <span className="modal__total-text">Total:</span>
-                    <span>$ {total}</span>
+                    <span>$ {totalCost}</span>
 
                     <button onClick={deleteOne} style={{width: '20px', height: '20px'}}>
                         Delete
                     </button>
-                </div>
+                </div>}
+
+                {(totalCost === 0) && <div className='modal__blank'></div>}
             </div>
         </div>
     );

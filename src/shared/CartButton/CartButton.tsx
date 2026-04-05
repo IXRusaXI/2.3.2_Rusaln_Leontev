@@ -7,9 +7,10 @@ interface CardButtonProps {
     text: string,
     add?: boolean
     onClick?: () => void;
+    productCount?: number
 }
 
-function CardButton({text, add, onClick}: CardButtonProps) {
+function CardButton({text, add, onClick, productCount}: CardButtonProps) {
 
     const type = add ? "cart-button" : "cart-button"
     
@@ -19,6 +20,7 @@ function CardButton({text, add, onClick}: CardButtonProps) {
                     "cart-button", 
                     add ? " cart-button--add" : ""
             )}>
+        {!!productCount && <span className="cart-button__count">{productCount}</span>}        
         <span className={classNames(type + '__text')}>
             {text}
         </span>
