@@ -22,12 +22,8 @@ const Modal = ({
 }: ModalProps) => {
     const [products, setProducts] = useState<[Item, number][]>([])
     const [totalCost, setTotalCost] = useState(0)
-        console.log("Сука", isOpen)
+    
     useEffect(() => {
-        console.log("Обновил списо продуктов в корзине",
-            productList?.size,
-            totalCount
-        )
         if (productList) {
             const array = Array.from(productList?.entries())
             setTotalCost(calculateTotalCost(array))

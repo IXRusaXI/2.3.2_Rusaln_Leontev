@@ -50,7 +50,6 @@ function App() {
   }
 
   function updateCart(item: Item, count: number) {
-    console.log("Products: ", products);
 
     if (count === 0) {
       removeFromCart(item)
@@ -68,7 +67,6 @@ function App() {
     
     setProducts(newProducts)
     setTotalCount(newTotalCount)
-    console.log("Products: ", products);
   }
 
   function removeFromCart(item: Item) {
