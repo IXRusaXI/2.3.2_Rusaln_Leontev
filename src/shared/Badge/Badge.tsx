@@ -5,7 +5,7 @@ import './style.scss'
 
 interface BadgeProps {
     text: string,
-    color: string,
+    color: "green" | "white",
     children?: React.ReactNode
 }
 

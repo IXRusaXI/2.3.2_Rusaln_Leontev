@@ -35,12 +35,6 @@ const Modal = ({
         }
     }, [totalCount, productList?.size, isOpen])
 
-
-
-    function deleteOne() {
-        setProducts(prev => prev.slice(0, prev.length - 1))
-    }
-
     function calculateTotalCost(list: [Item, number][]) {
         let total = 0
         list.forEach(([item, count]) => {
@@ -52,7 +46,7 @@ const Modal = ({
     if (!isOpen) return null;
 
     return (
-        <div className="overlay" onClick={onRequestClose}>
+        <div className="overlay" onClick={onRequestClose} data-testid="overlay">
             <div className="modal" onClick={(e) => e.stopPropagation()}>
                 {(totalCost !== 0) && <div className="modal__product-list">
                     {products?.map(([item, count], index ) => (
@@ -70,13 +64,12 @@ const Modal = ({
                 {(totalCost !== 0) && <div className="modal__total">
                     <span className="modal__total-text">Total:</span>
                     <span>$ {totalCost}</span>
-
-                    <button onClick={deleteOne} style={{width: '20px', height: '20px'}}>
-                        Delete
-                    </button>
                 </div>}
 
-                {(totalCost === 0) && <div className='modal__blank'></div>}
+                {(totalCost === 0) && <div className='modal__blank'>
+                    <span className="modal__blank-icon"></span>
+                    <span>Your cart is empty</span> 
+                </div>}
             </div>
         </div>
     );
