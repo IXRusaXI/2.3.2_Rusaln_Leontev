@@ -23,21 +23,6 @@ function App() {
       .catch(error => console.log(error))
   }, [])
 
-  useEffect(() => {
-    const keys = itemList.slice(0, 5)
-    let totalCount = 0
-
-    const setProducts = () => {
-      keys.forEach((item: Item) => {
-        products.set(item, 5)
-        totalCount += 5
-      })
-    }
-
-    setProducts()
-    setTotalCount(totalCount)
-  }, [itemList])
-
   function addToCart(item: Item, count: number) {
     if (count === 0) return
 
