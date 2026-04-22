@@ -1,26 +1,26 @@
 import StepperButton from "../StepperButton/StepperButton"
 import "./style.scss"
-import { useEffect, useState } from 'react'
-import type { Item } from "../../widgets/Catalog/Catalog";
+import { useAppDispatch } from "../../store/typedHooks";
+import { cartActions } from "../../store/slices/cart/cartSlice";
+import type { Item } from "../../store/store";
 
-interface StepperCounterProps {
+interface CartStepperCounterProps {
+    product: Item;
     count: number;
-    updateCount: (count: number) => void
 }
 
-export default function StepperCounter({
+export default function CartStepperCounter({
+    product,
     count,
-    updateCount
-}: StepperCounterProps) {
+}: CartStepperCounterProps) {
+    const dispatch = useAppDispatch()
 
     const handleIncrement = () => {
-        updateCount(count + 1)
+        dispatch(cartActions.incrementProduct(product))
     }
 
     const handleDecrement = () => {
-        if (count - 1 < 0) return
-
-        updateCount(count - 1)
+        dispatch(cartActions.decrementProduct(product))
     }
 
     return (

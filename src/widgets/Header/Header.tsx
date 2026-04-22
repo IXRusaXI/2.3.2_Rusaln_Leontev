@@ -1,23 +1,20 @@
 import './style.scss'
 import Badge from "../../shared/Badge/Badge"
 import CardButton from '../../shared/CartButton/CartButton'
+import { useAppDispatch, useAppSelector } from '../../store/typedHooks';
+import { modalActions } from '../../store/slices/modal/modalSlice';
 
-interface HeaderProps {
-    togglePopup: () => void;
-    productCount: number
-}
+function Header() {
+    const dispatch = useAppDispatch()
+    const productList = useAppSelector((state) => state.cart.cartList)
 
-function Header({ 
-    togglePopup,
-    productCount
-}: HeaderProps) {
     return (<>
         <header className="header">
             <Badge text='Vegetable' color="white">
                 <Badge text='SHOP' color="green"></Badge>
             </Badge>
 
-            <CardButton productCount={productCount} text='Cart' onClick={() => togglePopup()}/>
+            <CardButton productCount={productList.size} text='Cart' onClick={() => dispatch(modalActions.toggleCartModal())}/>
         </header>
     </>)
 }

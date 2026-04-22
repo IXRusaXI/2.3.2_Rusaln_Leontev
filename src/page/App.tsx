@@ -3,24 +3,21 @@ import Header from '../widgets/Header/Header'
 import Catalog from '../widgets/Catalog/Catalog'
 import './App.css'
 import type { Item } from '../widgets/Catalog/Catalog'
-import Modal from '../widgets/Modal/Modal'
+import Cart from '../widgets/Cart/Cart'
+import { useAppDispatch, useAppSelector } from './../store/typedHooks'
+import { fetchProducts } from './../store/slices/products/productThunk'
 
 function App() {
+  const dispatch = useAppDispatch()
+  const productList = useAppSelector((state) => state.products.productList)
+
+  const total = useAppSelector((state) => state.cart.total)
+
   const [products, setProducts] = useState<Map<Item, number>>(new Map())
-  const [itemList, setItemList] = useState([])
-  const [totalCount, setTotalCount] = useState(0)
   const [isOpen, setIsOpen] = useState(false);
 
-  const fetchItemList = async () => {
-      const response = await fetch('https://res.cloudinary.com/sivadass/raw/upload/v1535817394/json/products.json')
-      const respItemList = await response.json()
-      return respItemList
-  }
-
   useEffect(() => {
-      fetchItemList()
-      .then(itemList => setItemList(itemList))
-      .catch(error => console.log(error))
+      dispatch(fetchProducts())
   }, [])
 
   function addToCart(item: Item, count: number) {
@@ -68,22 +65,12 @@ function App() {
 
     
   return (<div className='app'>
-        <Header 
-          productCount={products.size}
-          togglePopup={() => togglePopup()}
-        />
+        <Header />
         <Catalog 
-          itemList={itemList}
+          productList={productList}
           addToCart={(item, count) => addToCart(item, count)}
         />
-        <Modal 
-          isOpen={isOpen}
-          totalCount={totalCount}
-          productList={products}
-          onRequestClose={togglePopup}
-          removeFromCart={(item) => removeFromCart(item)}
-          updateCart={(item, count) => updateCart(item, count)}
-        />
+        <Cart />
     </div>
   )
 }

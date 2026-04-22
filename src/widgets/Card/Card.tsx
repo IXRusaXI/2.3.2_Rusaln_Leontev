@@ -2,18 +2,29 @@ import classNames from "classnames"
 import './style.scss'
 import CardButton from "../../shared/CartButton/CartButton"
 import StepperCounter from "../../shared/StepperCounter/StepperCounter"
-import type { Item } from "../Catalog/Catalog";
 import { useState } from "react";
+import type { Item } from "../../store/store";
+import { useAppDispatch } from "../../store/typedHooks";
+import { cartActions } from "../../store/slices/cart/cartSlice";
 
 interface CardProps {
     item: Item;
-    addToCart: (item: Item, count: number) => void
+    // addToCart: (item: Item, count: number) => void
 }
 
-export default function Card({item, addToCart}: CardProps) {
-    const [add, setAdd] = useState(false)
+export default function Card({item}: CardProps) {
+    const dispatch = useAppDispatch()
+
+    const [count, setCount] = useState(0)
+
     const {name, price, image} = item;
     const [title, weight] = name.split(' - ')
+
+    function onClick() {
+        if (count == 0) return
+
+        dispatch(cartActions.addProduct({item, count}))
+    }
 
     return (
         <div className={classNames('card')}>
@@ -26,10 +37,8 @@ export default function Card({item, addToCart}: CardProps) {
                 </div>
 
                 <StepperCounter 
-                    add={add}
-                    addProductToCart={(item, count) => addToCart(item, count)} 
-                    item={item} 
-                    initialCount={0}
+                    count={count}
+                    updateCount={setCount}
                 />
             </div>
 
@@ -37,9 +46,8 @@ export default function Card({item, addToCart}: CardProps) {
                 <span className="card__price">$ {price}</span>
 
                 <CardButton 
-                    onClick={() => setAdd(!add)}
+                    onClick={onClick}
                     text='Add to cart' 
-                    add={true}
                 />
             </div>
         </div>

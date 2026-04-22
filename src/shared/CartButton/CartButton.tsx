@@ -5,9 +5,7 @@ import greenCart from './../icons/greenCart.svg'
 
 interface CardButtonProps {
     text: string,
-    add?: boolean
     onClick?: () => void;
-    productCount?: number
 }
 
 function CardButton({text, add, onClick, productCount}: CardButtonProps) {
