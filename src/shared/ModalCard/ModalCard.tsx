@@ -1,4 +1,4 @@
-import type { Item } from "../../widgets/Catalog/Catalog";
+import type { Item } from "../../store/store";
 import CartStepperCounter from "../StepperCounter/CartStepperCounter";
 import "./style.scss";
 import classNames from "classnames";

@@ -1,7 +1,5 @@
 import StepperButton from "../StepperButton/StepperButton"
 import "./style.scss"
-import { useEffect, useState } from 'react'
-import type { Item } from "../../widgets/Catalog/Catalog";
 
 interface StepperCounterProps {
     count: number;

@@ -1,29 +1,28 @@
 import classNames from "classnames"
 import './style.scss'
 import whiteCart from './../icons/whiteCart.svg'
-import greenCart from './../icons/greenCart.svg'
+import { useAppSelector } from "../../store/typedHooks";
 
 interface CardButtonProps {
     text: string,
     onClick?: () => void;
 }
 
-function CardButton({text, add, onClick, productCount}: CardButtonProps) {
+function CardButton({text, onClick }: CardButtonProps) {
+    const productList = useAppSelector((state) => state.cart.cartList)
+    const productCount = Object.keys(productList).length
 
-    const type = add ? "cart-button" : "cart-button"
-    
     return <button 
                 onClick={onClick}
                 className={classNames(
-                    "cart-button", 
-                    add ? " cart-button--add" : ""
+                    "cart-button" 
             )}>
-        {!!productCount && <span className="cart-button__count">{productCount}</span>}        
-        <span className={classNames(type + '__text')}>
+        {productCount !== 0 && <span className="cart-button__count">{productCount}</span>}        
+        <span className={classNames('text')}>
             {text}
         </span>
 
-        <img src={add ? greenCart : whiteCart} />
+        <img src={whiteCart} />
     </button>
 }
 

@@ -1,6 +1,6 @@
 import './style.scss'
 import Badge from "../../shared/Badge/Badge"
-import CardButton from '../../shared/CartButton/CartButton'
+import CartButton from '../../shared/CartButton/CartButton'
 import { useAppDispatch, useAppSelector } from '../../store/typedHooks';
 import { modalActions } from '../../store/slices/modal/modalSlice';
 
@@ -14,7 +14,7 @@ function Header() {
                 <Badge text='SHOP' color="green"></Badge>
             </Badge>
 
-            <CardButton productCount={productList.size} text='Cart' onClick={() => dispatch(modalActions.toggleCartModal())}/>
+            <CartButton text='Cart' onClick={() => dispatch(modalActions.toggleCartModal())}/>
         </header>
     </>)
 }
