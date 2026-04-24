@@ -1,118 +1,188 @@
-// import { describe, it, expect, vi } from 'vitest';
-// import { render, fireEvent } from '@testing-library/react';
-// import Modal from './Cart'
-// import type { Item } from '../Catalog/Catalog'
+// src/widgets/Cart/Cart.test.tsx
+import { describe, it, expect, vi } from 'vitest'
+import userEvent from '@testing-library/user-event'
+import { screen } from '@testing-library/react'
+import { renderWithProviders } from '../../test-utils/render'
+import Cart from './Cart'
+import type { Item } from '../../store/store'
+import * as modalSlice from '../../store/slices/modal/modalSlice'
 
-// describe('Modal component', () => {
-//     it('should render correctly', () => {
-//         const item: Item = {
-//             id: 1,
-//             name: 'Tomato',
-//             price: 10,
-//             image: 'https://example.com/image.jpg',
-//         }
+const makeCartItem = (overrides?: Partial<{ item: Item; count: number }>) => ({
+  item: {
+    id: 1,
+    name: 'Tomato - 1kg',
+    price: 5,
+    image: 'tomato.png',
+  },
+  count: 2,
+  ...overrides,
+})
 
-//         const list = new Map<Item, number>()
-//         list.set(item, 3)
+describe('Cart', () => {
+  describe('условный рендер по isOpen', () => {
+    // Проверяет, что при isCartOpen = false Cart не рендерит overlay
+    it('ничего не рендерит, если модалка закрыта (isCartOpen = false)', () => {
+      renderWithProviders(<Cart />, {
+        preloadedState: {
+          modal: { isCartOpen: false },
+          cart: { cartList: {}, total: 0 },
+        } as any,
+      })
 
-//         const { getByText } = render(<Modal
-//             isOpen={true}
-//             productList={list}
-//             onRequestClose={() => {}}
-//             removeFromCart={() => {}}
-//             updateCart={() => {}}
-//             totalCount={1}
-//         />)
+      expect(screen.queryByTestId('overlay')).not.toBeInTheDocument()
+    })
+  })
 
-//         expect(getByText(item.name)).toBeInTheDocument()
-//         expect(getByText(`$ ${item.price}`)).toBeInTheDocument()
-//     })
+  describe('состояние: корзина с товарами', () => {
+    const cartState = {
+      modal: { isCartOpen: true },
+      cart: {
+        cartList: {
+          '1': makeCartItem({
+            item: {
+              id: 1,
+              name: 'Tomato - 1kg',
+              price: 5,
+              image: 'tomato.png',
+            },
+            count: 2,
+          }),
+          '2': makeCartItem({
+            item: {
+              id: 2,
+              name: 'Cucumber - 500g',
+              price: 3,
+              image: 'cucumber.png',
+            },
+            count: 1,
+          }),
+        },
+        total: 13,
+      },
+    }
 
-//     it('should call onRequestClose when overlay is clicked', () => {
-//         const onRequestClose = vi.fn()
+    // Проверяет, что при открытой модалке рендерятся overlay и модалка
+    it('рендерит оверлей и модальное окно', () => {
+      renderWithProviders(<Cart />, {
+        preloadedState: cartState as any,
+      })
 
-//         const { getByTestId } = render(<Modal
-//             isOpen={true}
-//             onRequestClose={onRequestClose}
-//             removeFromCart={() => {}}
-//             updateCart={() => {}}
-//             totalCount={1}
-//         />)
+      const overlay = screen.getByTestId('overlay')
+      expect(overlay).toBeInTheDocument()
 
-//         const overlay = getByTestId('overlay' )
-//         fireEvent.click(overlay)
-//         expect(onRequestClose).toHaveBeenCalledTimes(1)
-//     })
+      const modal = overlay.querySelector('.modal')
+      expect(modal).not.toBeNull()
+    })
 
-//     it('should call updateCart when plus button is clicked', () => {
-//         const item: Item = {
-//             id: 1,
-//             name: 'Tomato',
-//             price: 10,
-//             image: 'https://example.com/image.jpg',
-//         }
+    // Проверяет, что для каждого товара создаётся ModalCard
+    it('рендерит ModalCard для каждого товара в cartList', () => {
+      renderWithProviders(<Cart />, {
+        preloadedState: cartState as any,
+      })
 
-//         const list = new Map<Item, number>()
-//         list.set(item, 3)
+      const cards = document.querySelectorAll('.modal-card')
+      expect(cards.length).toBe(2)
+    })
 
-//         const updateCart = vi.fn()
+    // Проверяет, что bordered=true у всех карточек, кроме последней
+    it('проставляет bordered=true для всех карточек, кроме последней', () => {
+      renderWithProviders(<Cart />, {
+        preloadedState: cartState as any,
+      })
 
-//         const { getByRole } = render(<Modal
-//             isOpen={true}
-//             productList={list}
-//             onRequestClose={() => {}}
-//             removeFromCart={() => {}}
-//             updateCart={updateCart}
-//             totalCount={1}
-//         />)
+      const wrappers = document.querySelectorAll('.modal-card__info-wrapper')
+      expect(wrappers.length).toBe(2)
 
-//         const plusButton = getByRole('button', { name: '+' })
+      expect(wrappers[0]).toHaveAttribute('data-bordered', 'true')
+      expect(wrappers[1]).toHaveAttribute('data-bordered', 'false')
+    })
 
-//         fireEvent.click(plusButton)
+    // Проверяет, что отображается блок с Total и правильной суммой
+    it('отображает сумму total', () => {
+      renderWithProviders(<Cart />, {
+        preloadedState: cartState as any,
+      })
 
-//         expect(updateCart).toHaveBeenCalledTimes(1)
-//         expect(updateCart).toHaveBeenCalledWith(item, 4)
-//     })
+      expect(screen.getByText('Total:')).toBeInTheDocument()
+      expect(screen.getByText('$ 13')).toBeInTheDocument()
+    })
 
-//     it('should call removeFromCart when minus button is clicked', () => {
-//         const item: Item = {
-//             id: 1,
-//             name: 'Tomato',
-//             price: 10,
-//             image: 'https://example.com/image.jpg',
-//         }
+    // Проверяет, что при наличии товаров не показывается блок "Your cart is empty"
+    it('не отображает блок "Your cart is empty"', () => {
+      renderWithProviders(<Cart />, {
+        preloadedState: cartState as any,
+      })
 
-//         const list = new Map<Item, number>()
-//         list.set(item, 1)
+      const emptyText = screen.queryByText('Your cart is empty')
+      expect(emptyText).not.toBeInTheDocument()
+    })
+  })
 
-//         const removeFromCart = vi.fn()
+  describe('состояние: пустая корзина', () => {
+    // Проверяет, что при пустой корзине нет списка товаров и total, но есть сообщение о пустой корзине
+    it('не рендерит список товаров и total, но показывает сообщение о пустой корзине', () => {
+      renderWithProviders(<Cart />, {
+        preloadedState: {
+          modal: { isCartOpen: true },
+          cart: {
+            cartList: {},
+            total: 0,
+          },
+        } as any,
+      })
 
-//         const { getByRole } = render(<Modal
-//             isOpen={true}
-//             productList={list}
-//             onRequestClose={() => {}}
-//             removeFromCart={removeFromCart}
-//             updateCart={() => {}}
-//             totalCount={1}
-//         />)
+      const cards = document.querySelectorAll('.modal-card')
+      expect(cards.length).toBe(0)
 
-//         const minusButton = getByRole('button', { name: '-' })
+      const totalBlock = document.querySelector('.modal__total')
+      expect(totalBlock).toBeNull()
 
-//         fireEvent.click(minusButton)
+      expect(screen.getByText('Your cart is empty')).toBeInTheDocument()
+    })
+  })
 
-//         expect(removeFromCart).toHaveBeenCalledTimes(1)
-//         expect(removeFromCart).toHaveBeenCalledWith(item)
-//     })
+  describe('поведение кликов (закрытие по оверлею и stopPropagation)', () => {
+    const openedState = {
+      modal: { isCartOpen: true },
+      cart: {
+        cartList: {
+          '1': makeCartItem(),
+        },
+        total: 10,
+      },
+    }
 
-//     it('should render correctly when totalCount is 0', () => {
-//         const { getByText } = render(<Modal
-//             isOpen={true}
-//             onRequestClose={() => {}}
-//             removeFromCart={() => {}}
-//             updateCart={() => {}}
-//             totalCount={0}
-//         />)
+    // Проверяет, что клик по оверлею диспатчит modalActions.toggleCartModal
+    it('по клику на оверлей диспатчит modalActions.toggleCartModal', async () => {
+      const user = userEvent.setup()
+      const toggleSpy = vi.spyOn(modalSlice.modalActions, 'toggleCartModal')
 
-//         expect(getByText('Your cart is empty')).toBeInTheDocument()
-//     })
-// })
+      renderWithProviders(<Cart />, {
+        preloadedState: openedState as any,
+      })
+
+      const overlay = screen.getByTestId('overlay')
+      await user.click(overlay)
+
+      expect(toggleSpy).toHaveBeenCalledTimes(1)
+    })
+
+    // Проверяет, что клик внутри модального окна не диспатчит toggleCartModal (stopPropagation)
+    it('клик внутри модального окна не закрывает модалку', async () => {
+      const user = userEvent.setup()
+      const toggleSpy = vi.spyOn(modalSlice.modalActions, 'toggleCartModal')
+      toggleSpy.mockClear()
+
+      renderWithProviders(<Cart />, {
+        preloadedState: openedState as any,
+      })
+
+      const overlay = screen.getByTestId('overlay')
+      const modal = overlay.querySelector('.modal') as HTMLElement
+
+      await user.click(modal)
+
+      expect(toggleSpy).not.toHaveBeenCalled()
+    })
+  })
+})

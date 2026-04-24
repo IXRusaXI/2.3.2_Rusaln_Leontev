@@ -1,22 +1,42 @@
-import './style.scss'
-import Badge from "../../shared/Badge/Badge"
+import { Box, Flex, Paper } from '@mantine/core'
+import Badge from '../../shared/Badge/Badge'
 import CartButton from '../../shared/CartButton/CartButton'
-import { useAppDispatch, useAppSelector } from '../../store/typedHooks';
-import { modalActions } from '../../store/slices/modal/modalSlice';
+import { useAppDispatch } from '../../store/typedHooks'
+import { modalActions } from '../../store/slices/modal/modalSlice'
+import './style.scss'
 
 function Header() {
-    const dispatch = useAppDispatch()
-    const productList = useAppSelector((state) => state.cart.cartList)
+  const dispatch = useAppDispatch()
 
-    return (<>
-        <header className="header">
-            <Badge text='Vegetable' color="white">
-                <Badge text='SHOP' color="green"></Badge>
-            </Badge>
+  const handleCartClick = () => {
+    dispatch(modalActions.toggleCartModal())
+  }
 
-            <CartButton text='Cart' onClick={() => dispatch(modalActions.toggleCartModal())}/>
-        </header>
-    </>)
+  return (
+    <Box component="header" className="header-sticky">
+      <Paper
+        radius={0}
+        withBorder={false}
+        shadow="sm"
+        bg="white"
+        h={60}
+        px={20}
+      >
+        <Flex
+          w="100%"
+          h="100%"
+          align="center"
+          justify="space-between"
+        >
+          <Badge text="Vegetable" color="white">
+            <Badge text="SHOP" color="green" />
+          </Badge>
+
+          <CartButton text="Cart" onClick={handleCartClick} />
+        </Flex>
+      </Paper>
+    </Box>
+  )
 }
 
 export default Header

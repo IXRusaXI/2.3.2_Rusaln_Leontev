@@ -1,36 +1,56 @@
-// import { render, fireEvent } from '@testing-library/react';
-// import Header from './Header';
-// import { describe, it, expect, vi } from 'vitest';
+// src/widgets/Header/Header.test.tsx
+import { describe, it, expect, vi } from 'vitest'
+import userEvent from '@testing-library/user-event'
+import { screen } from '@testing-library/react'
+import { renderWithProviders } from '../../test-utils/render'
+import Header from './Header'
+import * as modalSlice from '../../store/slices/modal/modalSlice'
 
-// describe('Header component', () => {
-//     it('should render correctly', () => {
-//         const { getByText } = render(<Header togglePopup={() => {}} productCount={0} />);
-//         expect(getByText('Vegetable')).toBeInTheDocument();
-//         expect(getByText('SHOP')).toBeInTheDocument();
-//         expect(getByText('Cart')).toBeInTheDocument();
-//     });
+describe('Header', () => {
+  describe('базовый рендер', () => {
+    // Проверяет, что рендерится header-контейнер
+    it('рендерит header-контейнер', () => {
+      renderWithProviders(<Header />)
 
-//     it('should call togglePopup when Cart button is clicked', () => {
-//         const togglePopup = vi.fn()
+      const header = screen.getByRole('banner')
+      expect(header).toBeInTheDocument()
+    })
 
-//         const { getByRole } = render(<Header togglePopup={togglePopup} productCount={0} />);
+    // Проверяет, что рендерится внешний Badge "Vegetable"
+    it('рендерит внешний Badge "Vegetable"', () => {
+      renderWithProviders(<Header />)
 
-//         const cartButton = getByRole('button', { name: 'Cart' });
+      expect(screen.getByText('Vegetable')).toBeInTheDocument()
+    })
 
-//         fireEvent.click(cartButton);
+    // Проверяет, что рендерится вложенный Badge "SHOP"
+    it('рендерит вложенный Badge "SHOP"', () => {
+      renderWithProviders(<Header />)
 
-//         expect(togglePopup).toHaveBeenCalledTimes(1);
-//     });
+      expect(screen.getByText('SHOP')).toBeInTheDocument()
+    })
 
-//     it('should display product count', () => {
-//         const { getByText } = render(<Header togglePopup={() => {}} productCount={5} />);
+    // Проверяет, что рендерится CartButton с текстом "Cart"
+    it('рендерит CartButton с текстом "Cart"', () => {
+      renderWithProviders(<Header />)
 
-//         expect(getByText('5')).toBeInTheDocument();
-//     });
+      const cartButton = screen.getByRole('button', { name: /cart/i })
+      expect(cartButton).toBeInTheDocument()
+    })
+  })
 
-//     it('should not display product count when it is zero', () => {
-//         const { queryByText } = render(<Header togglePopup={() => {}} productCount={0} />);
+  describe('открытие/закрытие корзины', () => {
+    // Проверяет, что по клику на CartButton вызывается modalActions.toggleCartModal
+    it('по клику на CartButton вызывает modalActions.toggleCartModal', async () => {
+      const user = userEvent.setup()
+      const toggleSpy = vi.spyOn(modalSlice.modalActions, 'toggleCartModal')
 
-//         expect(queryByText('0')).not.toBeInTheDocument();
-//     });
-// });
+      renderWithProviders(<Header />)
+
+      const cartButton = screen.getByRole('button', { name: /cart/i })
+      await user.click(cartButton)
+
+      expect(toggleSpy).toHaveBeenCalledTimes(1)
+    })
+  })
+})

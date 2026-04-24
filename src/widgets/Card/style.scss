@@ -1,51 +1,23 @@
 .card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-    // width: 352px;
-    width: 352px;
-    height: 464px;
-    box-sizing: border-box;
+  width: 352px;
+  height: 464px;
 
-    padding: 20px;
+  transition: box-shadow 0.25s ease-in-out;
 
-    // border: 1px solid black;
-    border-radius: 16px;
-    transition: box-shadow 0.25s ease-in-out;
+  &:hover {
+    box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.5);
+  }
 
-    background-color: white;
+  &__image {
+    width: 100%;
+    object-fit: cover;
+  }
 
-    &:hover {
-        box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.5);
-    }
-
-    &__row-wrapper {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    &__image {
-        width: 100%;
-        object-fit: cover;
-    }
-
-    &__title {
-        display: flex;
-        align-items: center;
-    }
-
-    &__name {
-        margin-right: 16px;
-    }
-
-    &__weight {
-        color: gray;
-    }
-
-    &__price {
-        font-weight: 600 !important;
-    }
+  &__name {
+    margin-right: 16px;
+  }
 }

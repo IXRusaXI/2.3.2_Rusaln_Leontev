@@ -1,51 +1,86 @@
-// import { describe, it, expect, vi } from 'vitest';
-// import { render, fireEvent } from '@testing-library/react';
-// import StepperCounter from './StepperCounter'
-// import type { Item } from "../../widgets/Catalog/Catalog";
+// src/shared/StepperCounter/StepperCounter.test.tsx
+import { describe, it, expect, vi } from 'vitest'
+import userEvent from '@testing-library/user-event'
+import { screen } from '@testing-library/react'
+import { renderWithProviders } from '../../test-utils/render'
+import StepperCounter from './StepperCounter'
 
-// describe('StepperCounter component', () => {
-//     it('should render correctly', () => {
-//         const item: Item = {
-//             id: 1,
-//             name: 'Tomato',
-//             price: 10,
-//             image: 'https://example.com/image.jpg',
-//         }
+describe('StepperCounter', () => {
+  describe('базовый рендер', () => {
+    // Проверяет, что текущее значение счётчика отображается
+    it('отображает текущее значение count', () => {
+      renderWithProviders(
+        <StepperCounter count={5} updateCount={vi.fn()} />
+      )
 
-//         const { getByText } = render(<StepperCounter
-//             item={item} 
-//             removeFromCart={() => {}}
-//             updateCart={() => {}}
-//             initialCount={0}
-//         />)
+      expect(screen.getByText('5')).toBeInTheDocument()
+    })
 
-//         expect(getByText('+')).toBeInTheDocument()
-//         expect(getByText('-')).toBeInTheDocument()
-//         expect(getByText('0')).toBeInTheDocument()
-//     })
+    // Проверяет, что рендерятся две кнопки управления
+    it('рендерит две кнопки: для уменьшения и увеличения значения', () => {
+      renderWithProviders(
+        <StepperCounter count={1} updateCount={vi.fn()} />
+      )
 
-//     it('should call removeFromCart when minus button is clicked', () => {
-//         const item: Item = {
-//             id: 1,
-//             name: 'Tomato',
-//             price: 10,
-//             image: 'https://example.com/image.jpg',
-//         }
+      const buttons = screen.getAllByRole('button')
+      expect(buttons).toHaveLength(2)
+    })
+  })
 
-//         const removeFromCart = vi.fn()
+  describe('инкремент', () => {
+    // Проверяет, что при клике по "+" вызывается updateCount с count + 1
+    it('вызывает updateCount с count + 1 при клике по кнопке "+"', async () => {
+      const user = userEvent.setup()
+      const updateCount = vi.fn()
+      const initialCount = 2
 
-//         const { getByRole } = render(<StepperCounter
-//             item={item} 
-//             updateCart={() => {}}
-//             removeFromCart={removeFromCart} 
-//             initialCount={1}
-//         />)
+      renderWithProviders(
+        <StepperCounter count={initialCount} updateCount={updateCount} />
+      )
 
-//         const minusButton = getByRole('button', { name: '-' })
+      const buttons = screen.getAllByRole('button')
+      const incrementButton = buttons[1]
 
-//         fireEvent.click(minusButton)
+      await user.click(incrementButton)
 
-//         expect(removeFromCart).toHaveBeenCalledTimes(1)
-//         expect(removeFromCart).toHaveBeenCalledWith(item)
-//     })
-// })
+      expect(updateCount).toHaveBeenCalledWith(initialCount + 1)
+    })
+  })
+
+  describe('декремент', () => {
+    // Проверяет, что при count > 0 клик по "-" вызывает updateCount с count - 1
+    it('вызывает updateCount с count - 1 при клике по кнопке "-" и count > 0', async () => {
+      const user = userEvent.setup()
+      const updateCount = vi.fn()
+      const initialCount = 3
+
+      renderWithProviders(
+        <StepperCounter count={initialCount} updateCount={updateCount} />
+      )
+
+      const buttons = screen.getAllByRole('button')
+      const decrementButton = buttons[0]
+
+      await user.click(decrementButton)
+
+      expect(updateCount).toHaveBeenCalledWith(initialCount - 1)
+    })
+
+    // Проверяет, что при count = 0 клик по "-" не вызывает updateCount
+    it('не вызывает updateCount, если текущее значение равно 0', async () => {
+      const user = userEvent.setup()
+      const updateCount = vi.fn()
+
+      renderWithProviders(
+        <StepperCounter count={0} updateCount={updateCount} />
+      )
+
+      const buttons = screen.getAllByRole('button')
+      const decrementButton = buttons[0]
+
+      await user.click(decrementButton)
+
+      expect(updateCount).not.toHaveBeenCalled()
+    })
+  })
+})

@@ -35,8 +35,6 @@ const cartSlice = createSlice({
             state.cartList[id] = {item: item, count: count}         
         }
 
-        console.log('Список продуктов: ', state.cartList)
-
         state.total += item.price * count
     },
     incrementProduct(state, action: PayloadAction<Item>) {
@@ -54,8 +52,6 @@ const cartSlice = createSlice({
         }
 
         state.total += action.payload.price
-
-        console.log('Список продуктов: ', state.cartList)
     },
     decrementProduct(state, action: PayloadAction<Item>) {
         const item = action.payload
@@ -73,8 +69,6 @@ const cartSlice = createSlice({
         }
 
         state.total -= action.payload.price
-
-        console.log('Список продуктов: ', state.cartList)
     },
   },
 })

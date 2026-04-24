@@ -1,29 +1,51 @@
-import classNames from "classnames"
-import './style.scss'
+import { Button, Image, Box, Text, Group } from '@mantine/core'
 import whiteCart from './../icons/whiteCart.svg'
-import { useAppSelector } from "../../store/typedHooks";
+import { useAppSelector } from '../../store/typedHooks'
 
-interface CardButtonProps {
-    text: string,
-    onClick?: () => void;
+interface CartButtonProps {
+  text: string
+  onClick?: () => void
 }
 
-function CardButton({text, onClick }: CardButtonProps) {
-    const productList = useAppSelector((state) => state.cart.cartList)
-    const productCount = Object.keys(productList).length
+function CartButton({ text, onClick }: CartButtonProps) {
+  const productList = useAppSelector((state) => state.cart.cartList)
+  const productCount = Object.keys(productList).length
 
-    return <button 
-                onClick={onClick}
-                className={classNames(
-                    "cart-button" 
-            )}>
-        {productCount !== 0 && <span className="cart-button__count">{productCount}</span>}        
-        <span className={classNames('text')}>
-            {text}
-        </span>
+  return (
+    <Button
+      onClick={onClick}
+      radius={8}
+      bg="#54B46A"
+      c="white"
+      px={40}
+      py={10}
+      w="auto"
+    >
+      <Group gap={15} align="center">
+        {productCount !== 0 && (
+          <Box
+            h={22}
+            w={22}
+            bg="white"
+            style={{
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Text fz={14} fw={600} c="#3B944E">
+              {productCount}
+            </Text>
+          </Box>
+        )}
 
-        <img src={whiteCart} />
-    </button>
+        <Text fw={600}>{text}</Text>
+
+        <Image src={whiteCart} alt="Cart" w={20} h={20} />
+      </Group>
+    </Button>
+  )
 }
 
-export default CardButton
+export default CartButton

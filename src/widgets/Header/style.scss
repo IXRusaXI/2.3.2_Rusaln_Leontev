@@ -1,20 +1,6 @@
-.header {
-    position: sticky;
-    z-index: 3;
-    top: 0;
-    left: 0;
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    width: ww;
-    height: 60px;
-
-    padding: 0 20px;
-
-    background-color: white;
-
-    box-shadow: 0 4px 3px 1px rgba(0, 0, 0, 0.062);
+.header-sticky {
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 3;
 }
-

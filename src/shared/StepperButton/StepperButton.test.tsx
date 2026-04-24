@@ -1,19 +1,52 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, fireEvent } from '@testing-library/react';
-import StepperButton from './StepperButton';
+// src/shared/StepperButton/StepperButton.test.tsx
+import { describe, it, expect, vi } from 'vitest'
+import userEvent from '@testing-library/user-event'
+import { screen } from '@testing-library/react'
+import { renderWithProviders } from '../../test-utils/render'
+import StepperButton from './StepperButton'
 
-describe('StepperButton component', () => {
-    it('should render correctly', () => {
-        const onClick = vi.fn()
-        const { getByText } = render(<StepperButton onClick={onClick}>+</StepperButton>)
-        expect(getByText('+')).toBeInTheDocument()
+describe('StepperButton', () => {
+  describe('базовый рендер', () => {
+    // Проверяет, что рендерится доступная кнопка
+    it('рендерит кнопку с role="button"', () => {
+      renderWithProviders(<StepperButton onClick={() => {}}>+</StepperButton>)
+
+      const button = screen.getByRole('button')
+      expect(button).toBeInTheDocument()
     })
 
-    it('should call onClick when clicked', () => {
-        const onClick = vi.fn()
-        const { getByRole } = render(<StepperButton onClick={onClick}>+</StepperButton>)
-        const button = getByRole('button', { name: '+' })
-        fireEvent.click(button)
-        expect(onClick).toHaveBeenCalledTimes(1)
+    // Проверяет, что отображаются переданные children
+    it('отображает переданные children внутри кнопки', () => {
+      renderWithProviders(<StepperButton onClick={() => {}}>+</StepperButton>)
+
+      expect(screen.getByText('+')).toBeInTheDocument()
     })
+
+    // Проверяет, что можно передать произвольный React-узел как children
+    it('может отображать любой React-узел как children', () => {
+      renderWithProviders(
+        <StepperButton onClick={() => {}}>
+          <span aria-label="minus">-</span>
+        </StepperButton>
+      )
+
+      const child = screen.getByLabelText('minus')
+      expect(child).toBeInTheDocument()
+    })
+  })
+
+  describe('поведение onClick', () => {
+    // Проверяет, что onClick вызывается при клике по кнопке
+    it('вызывает onClick при клике по кнопке', async () => {
+      const user = userEvent.setup()
+      const handleClick = vi.fn()
+
+      renderWithProviders(<StepperButton onClick={handleClick}>+</StepperButton>)
+
+      const button = screen.getByRole('button')
+      await user.click(button)
+
+      expect(handleClick).toHaveBeenCalledTimes(1)
+    })
+  })
 })

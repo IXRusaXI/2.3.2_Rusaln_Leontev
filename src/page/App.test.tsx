@@ -1,34 +1,37 @@
-import { render } from '@testing-library/react';
-import App from './App';
-import { useEffect } from 'react';
-import { describe, it, expect, vi } from 'vitest';
+// src/page/App.test.tsx
+import { describe, it, expect, vi } from 'vitest'
+import { screen } from '@testing-library/react'
+import { renderWithProviders } from '../test-utils/render'
+import App from './App'
+import * as productsThunk from '../store/slices/products/productThunk'
 
-describe('App component', () => {
-    it('should render correctly', () => {
-        const { getByText } = render(<App />);
-        expect(getByText('Vegetable')).toBeInTheDocument();
-    });
+describe('App', () => {
+  describe('базовый рендер', () => {
+    // Проверяет, что рендерятся Header, Catalog и Cart внутри корневого контейнера
+    it('рендерит Header, Catalog и Cart внутри корневого контейнера', () => {
+      renderWithProviders(<App />)
 
-    it('should render Header component', () => {
-        const { getByText } = render(<App />);
-        expect(getByText('Vegetable')).toBeInTheDocument();
-    });
+      const root = screen.getByTestId('app-root')
+      expect(root).toBeInTheDocument()
 
-    it('should render Catalog component', () => {
-        const { getByText } = render(<App />);
-        expect(getByText('Vegetable')).toBeInTheDocument();
-    });
+      // Header как <header> → role="banner"
+      expect(screen.getByRole('banner')).toBeInTheDocument()
 
-    it('should call fetchItemList when component mounts', () => {
-        const fetchItemListMock = vi.fn();
-        const AppMock = () => {
-            useEffect(() => {
-                fetchItemListMock();
-            }, [])
-            return <div />;
-        };
-        render(<AppMock />);
-        expect(fetchItemListMock).toHaveBeenCalledTimes(1);
-    });
+      // Catalog по заголовку
+      expect(
+        screen.getByRole('heading', { name: /catalog/i })
+      ).toBeInTheDocument()
+    })
+  })
 
+  describe('поведение useEffect при маунте', () => {
+    // Проверяет, что при первом рендере вызывается fetchProducts один раз
+    it('вызывает dispatch(fetchProducts()) один раз при первом рендере', () => {
+      const fetchProductsSpy = vi.spyOn(productsThunk, 'fetchProducts')
+
+      renderWithProviders(<App />)
+
+      expect(fetchProductsSpy).toHaveBeenCalledTimes(1)
+    })
+  })
 })
