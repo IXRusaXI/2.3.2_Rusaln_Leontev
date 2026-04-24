@@ -53,9 +53,6 @@ describe('Card', () => {
       const user = userEvent.setup()
       renderWithProviders(<Card item={baseItem} />)
 
-      const buttons = screen.getAllByRole('button')
-      // Внутри Card несколько кнопок (StepperCounter, Add to cart),
-      // поэтому ищем именно кнопку с текстом "+"
       const incrementButton = screen.getByText('+')
       await user.click(incrementButton)
 

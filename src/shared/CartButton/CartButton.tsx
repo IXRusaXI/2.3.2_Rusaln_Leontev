@@ -18,7 +18,6 @@ function CartButton({ text, onClick }: CartButtonProps) {
       bg="#54B46A"
       c="white"
       px={40}
-      py={10}
       w="auto"
     >
       <Group gap={15} align="center">
