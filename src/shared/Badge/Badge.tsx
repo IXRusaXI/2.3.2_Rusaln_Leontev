@@ -16,7 +16,7 @@ function Badge({ text, color, children }: BadgeProps) {
     <Box
       display="flex"
       h={34}
-      px={10}
+      pl={10}
       pb={2}
       bg={background}
       c={textColor}
