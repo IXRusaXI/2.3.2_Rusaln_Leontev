@@ -10,7 +10,7 @@ export const fetchProducts = createAsyncThunk<
   void,
   { rejectValue: ApiError }
 >(
-  'users/fetchById',
+  'products/fetchProducts',
   async (_, thunkApi) => {
     try {
       const response = await fetch('https://res.cloudinary.com/sivadass/raw/upload/v1535817394/json/products.json')
